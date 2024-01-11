@@ -64,148 +64,6 @@ def copy_chart_to_existing_slide(excel_path, sheet_name, presentation, slide_ind
     finally:
         excelWorkbook.Close(SaveChanges=False)
 
-def copy_avg_attendance_to_slide(excel_path, sheet_name, presentation, slide_index, copy_count=None):
-    try:
-        xlApp = win32.Dispatch('Excel.Application')
-        excelWorkbook = xlApp.Workbooks.Open(excel_path)
-
-        # Find the specified sheet in the Excel workbook
-        for sheet in excelWorkbook.Sheets:
-            if sheet.Name == sheet_name:
-                sheet.Copy(Before=excelWorkbook.Sheets[1])
-                xlApp.Visible = False  # You may choose to hide Excel
-
-                copiedSheet = excelWorkbook.Sheets[1]
-                copiedSheet.Activate()
-
-                # Get data from the sheet, excluding the first column (column A)
-                data = [list(row)[1:] for row in copiedSheet.UsedRange.Value]
-
-                # Create a new slide in the PowerPoint presentation
-                slide = presentation.slides[slide_index]
-
-                # Define the area to cover on the slide based on slide_index
-                if slide_index == 4:  # Slide 4 - First 16 rows
-                    left = Inches(1.5)
-                    top = Inches(0.5)
-                    width = Inches(13)
-                    height = Inches(6.8)
-
-                    # Determine the number of rows to copy based on copy_count
-                    if copy_count:
-                        data = data[:copy_count]
-
-                elif slide_index == 5:  # Slide 5 - First row + last 15 rows of column A
-                    left = Inches(1.5)
-                    top = Inches(0.5)
-                    width = Inches(13)
-                    height = Inches(6.9)
-
-                    # Extract the first row and bottom 15 rows of column A excluding the last row
-                    data = [data[0]] + data[-16:-1]
-
-                # Add data to the slide, for example, create a table
-                table = slide.shapes.add_table(rows=len(data), cols=len(data[0]), left=left, top=top,
-                                              width=width, height=height).table
-
-                # Populate the table with data
-                for i, row in enumerate(data):
-                    for j, value in enumerate(row):
-                        cell = table.cell(i, j)
-                        cell.text = str(value)
-
-                        # Adjust font size if specified
-                        if copy_count and i == copy_count - 1:
-                            cell.text_frame.paragraphs[0].font.size = Pt(11)  
-                        else:
-                            # Default font size for other cells
-                            cell.text_frame.paragraphs[0].font.size = Pt(11)
-
-                return
-
-        logging.warning(f"No sheet found: {sheet_name}")
-
-    except Exception as e:
-        logging.error(f"Error while processing {excel_path}: {e}")
-
-    finally:
-        excelWorkbook.Close(SaveChanges=False)
-
-def copy_table_to_slide(excel_path, sheet_name, presentation, slide_index, font_size=None, copy_count=None):
-    try:
-        xlApp = win32.Dispatch('Excel.Application')
-        excelWorkbook = xlApp.Workbooks.Open(excel_path)
-
-        # Find the specified sheet in the Excel workbook
-        for sheet in excelWorkbook.Sheets:
-            if sheet.Name == sheet_name:
-                sheet.Copy(Before=excelWorkbook.Sheets[1])
-                xlApp.Visible = False  # You may choose to hide Excel
-
-                copiedSheet = excelWorkbook.Sheets[1]
-                copiedSheet.Activate()
-
-                # Get data from the sheet, assuming you want to copy cell values
-                data = copiedSheet.UsedRange.Value
-
-                # Determine the number of rows to copy based on copy_count
-                if copy_count:
-                    data = data[:copy_count]
-
-                # Create a new slide in the PowerPoint presentation
-                slide = presentation.slides[slide_index]
-
-                # Define the area to cover on the slide based on slide_index
-                if slide_index == 12:  # CSR Table 2
-                    left = Inches(1.5)
-                    top = Inches(1.3)
-                    width = Inches(8.2)
-                    height = Inches(6.5)
-                elif slide_index == 8:  # MRR
-                    left = Inches(1.5)
-                    top = Inches(0.4)
-                    width = Inches(10)
-                    height = Inches(6)
-                elif slide_index == 11:  # CSR Table 1
-                    left = Inches(1.5)
-                    top = Inches(0.4)
-                    width = Inches(10)
-                    height = Inches(6)
-                elif slide_index == 22:  # Church Analysis
-                    left = Inches(1.5)
-                    top = Inches(0.4)
-                    width = Inches(11.6)
-                    height = Inches(6.5)
-                else:  # HF, Converts
-                    data = [list(row)[1:] for row in copiedSheet.UsedRange.Value]
-                    left = Inches(1.5)
-                    top = Inches(0.4)
-                    width = Inches(11.5)
-                    height = Inches(6.7)
-
-                # Add data to the slide, for example, create a table
-                table = slide.shapes.add_table(rows=len(data), cols=len(data[0]), left=left, top=top,
-                                              width=width, height=height).table
-
-                # Populate the table with data
-                for i, row in enumerate(data):
-                    for j, value in enumerate(row):
-                        cell = table.cell(i, j)
-                        cell.text = str(value)
-
-                        # Adjust font size if specified
-                        if font_size:
-                            cell.text_frame.paragraphs[0].font.size = font_size
-
-                return
-
-        logging.warning(f"No sheet found: {sheet_name}")
-
-    except Exception as e:
-        logging.error(f"Error while processing {excel_path}: {e}")
-
-    finally:
-        excelWorkbook.Close(SaveChanges=False)
 
 def process_excel_files_in_folder(folder_path, pptx_template_path):
     xlApp = win32.Dispatch('Excel.Application')
@@ -257,8 +115,8 @@ def main():
         pptx_path = sys.argv[2]
     else:
         # Use default paths if command-line arguments are not provided
-        folder_path = r"C:\Users\PMD - FEMI\Desktop\cleanedFiles\cleaned_files"
-        pptx_path = r'C:\Users\PMD - FEMI\Desktop\region 13\sampleAutomate.pptx'
+        folder_path = r"C:\Users\PMD - FEMI\Desktop\cleanedFiles\ANNUALLY\cleaned_files"
+        pptx_path = r"C:\Users\PMD - FEMI\Desktop\PPTX_TEMPLATES\Annual_template.pptx"
 
     process_excel_files_in_folder(folder_path, pptx_path)
 

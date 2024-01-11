@@ -321,10 +321,10 @@ def clean_excel_file(file_path):
     wb.save(file_path)
 
     # Print a statement once it finishes cleaning.
-    print(f"Cleaning Excel File '{file_path}'...")
+    print(f"It's cleaning the MRR, the 2 CSRs and Church Analysis Sheets of the excel file...")
 
 # Specify the folder path containing Excel files
-folder_path = r"C:\Users\PMD - FEMI\Desktop\DELTA PROVINCE 20\ANNUAL\cleaned_files"
+folder_path = r"C:\Users\PMD - FEMI\Desktop\cleanedFiles\ANNUALLY\cleaned_files"
 
 # Iterate over all Excel files in the folder
 for filename in os.listdir(folder_path):

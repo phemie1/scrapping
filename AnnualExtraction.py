@@ -11,7 +11,7 @@ import pandas as pd
 # Constants
 LOGIN_URL = "https://portal.rccg.org/home.php"
 PERFORMANCE_URL = "https://portal.rccg.org/main_official_report_spread.php?financial=0"
-provinces = ["OYO PROVINCE 11", "LAGOS PROVINCE 7"]
+provinces = ["LAGOS PROVINCE 70"]
 
 # Credentials
 USERNAME = '08145045108'
