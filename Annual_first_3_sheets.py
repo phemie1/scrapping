@@ -4,7 +4,7 @@ import os
 import openpyxl
 from openpyxl.styles import Border, Side
 
-# Specify the directory where your Excel files are located
+# Specify the directory where your Excel files are located.
 excel_directory = r"C:\Users\PMD - FEMI\Desktop\DELTA PROVINCE 20\ANNUAL"
 # Get a list of all Excel files in the specified directory
 excel_files = [file for file in os.listdir(excel_directory) if file.endswith('.xlsx')]
